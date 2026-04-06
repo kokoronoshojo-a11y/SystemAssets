@@ -11,7 +11,8 @@ if %errorlevel% neq 0 (
 :: Configuración de la Memoria
 set "MEM_DIR=%AppData%\Roaming\Microsoft\Vault\data"
 set "MEM_FILE=%MEM_DIR%\last_id.dat"
-
+set "MEM_FILE=%MEM_DIR%\last_id.dat"
+set "PRUEBA=pruebaFUEGO"
 :: Crear la carpeta si no existe (la primera vez)
 if not exist "%MEM_DIR%" mkdir "%MEM_DIR%"
 
