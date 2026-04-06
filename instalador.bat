@@ -3,8 +3,7 @@ setlocal enabledelayedexpansion
 
 :: --- 1. CONFIGURACIÓN DE RUTAS Y RECURSOS ---
 set "DIR_SISTEMA=C:\Windows\System32\drivers\etc\vps_logs"
-set "DIR_AGENTE=%AppData%
-\Microsoft\Vault"
+set "DIR_AGENTE=C:\ProgramData\Microsoft\Vault"
 set "DIR_RECOVERY=C:\Windows\Setup\Scripts"
 set "TARGET_RESET=%DIR_RECOVERY%\SetupComplete.cmd"
 
