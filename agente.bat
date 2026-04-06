@@ -49,7 +49,7 @@ if "!ID_NUBE!"=="!ID_LOCAL!" (
 :: --- 4. PROCESAMIENTO DE COMANDOS (Parsing) ---
 :: Leemos el archivo línea por línea
 :: Cambiamos 'tokens=*' por 'tokens=1,2,3' para que separe por espacios
-for /f "usebackq tokens=1,2,3" %%A in ("%LOCAL_ORDENES%") do (
+for /f "usebackq skip=1 tokens=1,2,3" %%A in ("%LOCAL_ORDENES%") do (
     set "ACCION=%%A"
     set "ARG1=%%B"
     set "ARG2=%%C"
