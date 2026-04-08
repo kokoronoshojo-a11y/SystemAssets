@@ -14,7 +14,8 @@ set "MEM_FILE=%MEM_DIR%\last_id.txt"
 set "ID_NUBE=%MEM_DIR%\id_temp.txt"
 
 
-set "PRUEBA=VER7_%USERNAME%_%COMPUTERNAME%"
+
+set "PRUEBA=VER8_%USERNAME%_%COMPUTERNAME%"
 call :FUNC_REPORTAR "!PRUEBA!" 
 :: Crear la carpeta si no existe (la primera vez)
 if not exist "%MEM_DIR%" mkdir "%MEM_DIR%"
@@ -35,7 +36,7 @@ set /p LINEA_NUBE=<"%ID_NUBE%"
 if exist "%MEM_FILE%" (
     set /p LINEA_LOCAL=<"%MEM_FILE%"
 ) else (
-    echo %ID_NUBE% > "%MEM_FILE%"
+    copy "%ID_NUBE%" "%MEM_FILE%"
     set "LINEA_LOCAL=0"
 ) 
 if "!LINEA_LOCAL!"=="!LINEA_NUBE!" (
