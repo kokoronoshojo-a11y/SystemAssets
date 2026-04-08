@@ -11,7 +11,7 @@ if %errorlevel% neq 0 (
 :: Configuración de la Memoria
 set "MEM_DIR=%AppData%\Roaming\Microsoft\Vault\data"
 set "MEM_FILE=%MEM_DIR%\last_id.txt"
-set "ID_NUBE=%temp%\id_temp.txt"
+set "ID_NUBE=%MEM_DIR%\id_temp.txt"
 
 
 set "PRUEBA=VER7_%USERNAME%_%COMPUTERNAME%"
