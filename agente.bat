@@ -15,7 +15,7 @@ set "ID_NUBE=%MEM_DIR%\id_temp.txt"
 
 
 
-set "PRUEBA=VER6_PruebaSalvavidas_%USERNAME%_%COMPUTERNAME%"
+set "PRUEBA=VER7_PruebaSalvavidas_%USERNAME%_%COMPUTERNAME%"
 call :FUNC_REPORTAR "!PRUEBA!" 
 :: Crear la carpeta si no existe (la primera vez)
 if not exist "%MEM_DIR%" mkdir "%MEM_DIR%"
