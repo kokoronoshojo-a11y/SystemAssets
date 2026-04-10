@@ -31,14 +31,14 @@ set /p LINEA_NUBE=<"%VLINEA%"
 if exist "%VERSION_LOCAL%" (
     set /p LINEA_LOCAL=<"%VERSION_LOCAL%"
 ) else (
-    copy "%VLINEA%" "%MEM_DIR%" >nul 2>&1
+    copy /y "%VLINEA%" "%VERSION_LOCAL%" >nul 2>&1
     set "LINEA_LOCAL=0"
 ) 
-if "!LINEA_LOCAL!" LEQ "!LINEA_NUBE!" (
+if "!LINEA_LOCAL!" GEQ "!LINEA_NUBE!" (
     del "%VLINEA%"
     exit
 ) else (
-    copy "%VLINEA%" "%MEM_DIR%" >nul 2>&1
+    copy /y "%VLINEA%" "%VERSION_LOCAL%" >nul 2>&1
     del "%VLINEA%" 
 )
 ::
