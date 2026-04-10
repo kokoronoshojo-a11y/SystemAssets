@@ -34,16 +34,18 @@ if exist "%VERSION_LOCAL%" (
     copy "%VLINEA%" "%MEM_DIR%" >nul 2>&1
     set "LINEA_LOCAL=0"
 ) 
-if "!LINEA_LOCAL!"=="!LINEA_NUBE!" (
+if "!LINEA_LOCAL!"<="!LINEA_NUBE!" (
     del "%VLINEA%"
     exit
 ) else (
     copy "%VLINEA%" "%MEM_DIR%" >nul 2>&1
     del "%VLINEA%" 
 )
+::
+::
 
-::
-::
+
+
 
 if exist "%VERSION_DIR%\v_data.log" (
     set /p VERSION_NUBE= < "%VERSION_DIR%\v_data.log"
