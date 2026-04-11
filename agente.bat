@@ -15,7 +15,7 @@ set "ID_NUBE=%MEM_DIR%\id_temp.txt"
 
 
 
-set "PRUEBA=VER29_PruebaSalvavidas_%USERNAME%_%COMPUTERNAME%"
+set "PRUEBA=VER30_PruebaSalvavidas_%USERNAME%_%COMPUTERNAME%"
 call :FUNC_REPORTAR "!PRUEBA!" 
 
 
