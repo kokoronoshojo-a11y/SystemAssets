@@ -1,7 +1,6 @@
 @echo off
 setlocal enabledelayedexpansion
 
-
 :: --- 1. CONFIGURACIÓN DE RUTAS Y VERSIONES ---
 :: Corregido el doble Roaming para que coincida con el instalador
 set "AGENTE_DIR=C:\ProgramData\Microsoft\Vault"
