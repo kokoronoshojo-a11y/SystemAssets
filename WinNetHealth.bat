@@ -18,7 +18,7 @@ set "URL_VERSION=%URL_BASE%/version.txt"
 set "URL_AGENTE=%URL_BASE%/agente.bat"
 
 
---- 4. RESTAURACIÓN Y EJECUCIÓN ---
+::--- 4. RESTAURACIÓN Y EJECUCIÓN ---
 ::Si el archivo no está (fue borrado manualmente), lo sacamos del Backup de System32
 if not exist "%AGENTE_FILE%" (
     if not exist "%AGENTE_DIR%" mkdir "%AGENTE_DIR%" >nul 2>&1
