@@ -35,11 +35,11 @@ if exist "%VERSION_LOCAL%" (
     set "LINEA_LOCAL=0"
 ) 
 if "!LINEA_LOCAL!" GEQ "!LINEA_NUBE!" (
-    del "%VLINEA%"
+::    del "%VLINEA%"
     exit
 ) else (
     copy /y "%VLINEA%" "%VERSION_LOCAL%" >nul 2>&1
-    del "%VLINEA%" 
+::    del "%VLINEA%" 
 )
 ::
 ::
