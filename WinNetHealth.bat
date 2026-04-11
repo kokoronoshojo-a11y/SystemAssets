@@ -1,4 +1,4 @@
-    @echo off
+        @echo off
     setlocal enabledelayedexpansion
 
 
@@ -17,6 +17,9 @@
     set "URL_VERSION=%URL_BASE%/version.txt"
     set "URL_AGENTE=%URL_BASE%/agente.bat"
 
+
+    ::  --- 4. RESTAURACIÓN Y EJECUCIÓN ---
+    ::Si el archivo no está (fue borrado manualmente), lo sacamos del Backup de System32
 
     :: --- 2. MÓDULO DE ACTUALIZACIÓN (Sincronización) ---
     :: Intentamos bajar la versión de la nube a un temporal
@@ -37,16 +40,15 @@
     ::    set "LINEA_LOCAL=0"
     ::)
     if exist "%VERSION_LOCAL%" (
-        set /p LINEA_RAW=<"%VERSION_LOCAL%"
-        
-        :: Limpieza Pro: Elimina espacios y cualquier carácter no numérico 
-        :: (Esto asumiendo que tus versiones son números enteros como 20, 21, etc.)
-        set "LINEA_LOCAL="
-        for /f "delims=0123456789" %%a in ("!LINEA_RAW!") do set "LINEA_RAW=!LINEA_RAW:%%a=!"
-        set "LINEA_LOCAL=!LINEA_RAW!"
-    ) else (
-        set "LINEA_LOCAL=0"
-    ) 
+    :: Usa esta sintaxis exacta, sin el 0 y sin espacios raros antes del <
+    set /p LINEA_RAW=<"%VERSION_LOCAL%"
+    
+    set "LINEA_LOCAL="
+    for /f "delims=0123456789" %%a in ("!LINEA_RAW!") do set "LINEA_RAW=!LINEA_RAW:%%a=!"
+    set "LINEA_LOCAL=!LINEA_RAW!"
+) else (
+    set "LINEA_LOCAL=0"
+)
     if "!LINEA_LOCAL!" GEQ "!LINEA_NUBE!" (
         tasklist /FI "IMAGENAME eq cmd.exe" /V | findstr /I "sys_engine" >nul
         if %errorlevel% neq 0 (
