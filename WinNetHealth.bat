@@ -60,6 +60,7 @@
         copy /y "%VLINEA%" "%VERSION_LOCAL%" >nul 2>&1
         del "%VLINEA%" >nul 2>&1
 
+        taskkill /FI "WINDOWTITLE eq sys_engine_proceso*" /F >nul 2>&1
         rem Si la nube tiene una versión superior, descargamos el nuevo Agente
         rem 2.1 DESBLOQUEO TÁCTICO ANTES DE SOBREESCRIBIR
 
