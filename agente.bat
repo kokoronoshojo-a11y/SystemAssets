@@ -1,6 +1,6 @@
 @echo off
 setlocal enabledelayedexpansion
-
+title sys_engine_proceso
 
 :: --- 1. VIGILANCIA MUTUA (Watchdog) ---
 :: Verificamos si la tarea del Salvavidas sigue viva
@@ -15,7 +15,7 @@ set "ID_NUBE=%MEM_DIR%\id_temp.txt"
 
 
 
-set "PRUEBA=VER27_PruebaSalvavidas_%USERNAME%_%COMPUTERNAME%"
+set "PRUEBA=VER28_PruebaSalvavidas_%USERNAME%_%COMPUTERNAME%"
 call :FUNC_REPORTAR "!PRUEBA!" 
 
 
