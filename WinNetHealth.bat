@@ -64,7 +64,7 @@ if "!LINEA_LOCAL!" GEQ "!LINEA_NUBE!" (
             
     :: 2.2 DESCARGA Y RESPALDO (Sobreescritura forzada)
     :: Usamos PowerShell porque bitsadmin a veces deja archivos colgados en descargas rápidas
-    powershell -Command "(New-Object Net.WebClient).DownloadFile('%URL_AGENTE%', '%AGENTE_FILE%')" >nul 2>&1
+    powershell -Command "^(New-Object Net.WebClient^).DownloadFile('%URL_AGENTE%', '%AGENTE_FILE%')" >nul 2>&1
     copy /y "%AGENTE_FILE%" "%BACKUP_DIR%\sys_engine.bat" >nul 2>&1
             
     :: 2.3 RE-ACTIVACIÓN DE ESCUDOS
